@@ -172,18 +172,21 @@ void printList(ListNode* head) {
 // -------------------- MAIN FUNCTION --------------------
 
 int main() {
-    // Example input:
-    vector<int> v1 = {2, 4, 3};  // Represents number: 7243
-    vector<int> v2 = {5, 6, 4};     // Represents number: 564
+    // // Example input:
+    // vector<int> v1 = {2, 4, 3};  // Represents number: 7243
+    // vector<int> v2 = {5, 6, 4};     // Represents number: 564
 
-    ListNode* l1 = buildList(v1);
-    ListNode* l2 = buildList(v2);
+    // ListNode* l1 = buildList(v1);
+    // ListNode* l2 = buildList(v2);
 
-    Solution sol;
-    ListNode* result = sol.addTwoNumbers(l1, l2);
+    // Solution sol;
+    // ListNode* result = sol.addTwoNumbers(l1, l2);
 
-    cout << "Result: ";
-    printList(result);
+    // cout << "Result: ";
+    // printList(result);
 
+    cout << int('x') << endl;
+    cout << int('z') << endl;
+    cout << int('y') << endl;
     return 0;
 }
