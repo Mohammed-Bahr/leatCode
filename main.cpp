@@ -76,117 +76,91 @@
 // Definition for singly-linked list.
 
 
+
 #include <bits/stdc++.h>
 using namespace std;
-struct ListNode
-{
+
+struct ListNode {
     int val;
-    ListNode *next;
-    ListNode() : val(0), next(nullptr) {}
-    ListNode(int x) : val(x), next(nullptr) {}
-    ListNode(int x, ListNode *next) : val(x), next(next) {}
+    ListNode* next;
+    ListNode(int x) : val(x), next(NULL) {}
 };
 
-class Solution
-{
+class Solution {
 public:
-    ListNode *addTwoNumbers(ListNode *list1, ListNode *list2)
-    {
-        if (!list1 || !list2) return nullptr;
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        if (!head) return nullptr;
 
-        stack<int> stack1, stack2;
+        int size = 0;
+        ListNode* dummy = head;
 
-        // Push digits of first list
-        ListNode *current1 = list1;
-        while (current1) {
-            stack1.push(current1->val);
-            current1 = current1->next;
+        // 1. Count size
+        while (dummy) {
+            size++;
+            dummy = dummy->next;
         }
 
-        // Push digits of second list
-        ListNode *current2 = list2;
-        while (current2) {
-            stack2.push(current2->val);
-            current2 = current2->next;
+        // 2. Map node positions from end (using pointer as key)
+        unordered_map<ListNode*, int> dp;
+        ListNode* temp = head;
+        int posFromEnd = size;
+
+        while (temp) {
+            dp[temp] = posFromEnd--;
+            temp = temp->next;
         }
 
-        // Convert stacks to strings
-        string numStr1, numStr2;
-        while (!stack1.empty()) {
-            numStr1 += to_string(stack1.top());
-            stack1.pop();
+        // 3. If head is the node to remove
+        if (dp[head] == n) {
+            ListNode* del = head;
+            head = head->next;
+            delete del;
+            return head;
         }
 
-        while (!stack2.empty()) {
-            numStr2 += to_string(stack2.top());
-            stack2.pop();
+        // 4. Find previous node
+        ListNode* curr = head;
+        while (curr && curr->next) {
+            if (dp[curr->next] == n) {
+                ListNode* D = curr->next;
+                curr->next = curr->next->next;
+                delete D;
+                return head;
+            }
+            curr = curr->next;
         }
 
-        // Add the two numbers
-        int sumValue = stoi(numStr1) + stoi(numStr2);
-        string sumStr = to_string(sumValue);
-
-        // Push digits of result into stack
-        stack<int> resultStack;
-        for (char digitChar : sumStr) {
-            resultStack.push(digitChar - '0');  // convert char to int digit
-        }
-
-        // Build the resulting linked list
-        ListNode *resultHead = new ListNode(resultStack.top());
-        resultStack.pop();
-
-        ListNode *resultCurrent = resultHead;
-
-        while (!resultStack.empty()) {
-            resultCurrent->next = new ListNode(resultStack.top());
-            resultStack.pop();
-            resultCurrent = resultCurrent->next;
-        }
-
-        return resultHead;
+        return head;
     }
 };
-
-
-ListNode* buildList(vector<int> v) {
-    if (v.empty()) return nullptr;
-    ListNode* head = new ListNode(v[0]);
-    ListNode* curr = head;
-    for (int i = 1; i < v.size(); i++) {
-        curr->next = new ListNode(v[i]);
-        curr = curr->next;
-    }
-    return head;
-}
 
 void printList(ListNode* head) {
     while (head) {
-        cout << head->val;
-        if (head->next) cout << " -> ";
+        cout << head->val << " ";
         head = head->next;
     }
-    cout << "\n";
+    cout << endl;
 }
 
-// -------------------- MAIN FUNCTION --------------------
-
+// =============================================
 int main() {
-    // // Example input:
-    // vector<int> v1 = {2, 4, 3};  // Represents number: 7243
-    // vector<int> v2 = {5, 6, 4};     // Represents number: 564
+    // Create linked list: 1 -> 2 -> 3 -> 4 -> 5
+    ListNode* head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(3);
+    head->next->next->next = new ListNode(4);
+    head->next->next->next->next = new ListNode(5);
 
-    // ListNode* l1 = buildList(v1);
-    // ListNode* l2 = buildList(v2);
+    cout << "Original list: ";
+    printList(head);
 
-    // Solution sol;
-    // ListNode* result = sol.addTwoNumbers(l1, l2);
+    Solution s;
 
-    // cout << "Result: ";
-    // printList(result);
+    int n = 2; // remove 2nd from end (should remove 4)
+    head = s.removeNthFromEnd(head, n);
 
-    cout << int('x') << endl;
-    cout << int('z') << endl;
-    cout << int('y') << endl;
+    cout << "After removing " << n << "-th from end: ";
+    printList(head);
+
     return 0;
 }
